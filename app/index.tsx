@@ -57,13 +57,13 @@ export default function WelcomeScreen() {
               </View>
             </View>
           </View>
+<View style={styles.textContainer}>
+  <Text style={styles.title}>Smarter{'\n'}Saving, Simplified</Text>
+  <Text style={styles.subtitle}>
+    Koso helps you stay ahead on rent, food, and school{'\n'}
+  </Text>
+</View>
 
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>Redefining{'\n'}Finance</Text>
-            <Text style={styles.subtitle}>
-              An A.I. buddy that does the heavy{'\n'}lifting for you
-            </Text>
-          </View>
 
           <View style={styles.pageIndicators}>
             <View style={[styles.dot, styles.activeDot]} />
