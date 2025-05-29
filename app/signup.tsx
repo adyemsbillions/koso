@@ -2,16 +2,16 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 export default function SignupScreen() {
@@ -26,6 +26,7 @@ export default function SignupScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignup = async () => {
+    // Client-side validation
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
@@ -45,22 +46,78 @@ export default function SignupScreen() {
       Alert.alert('Error', 'Please agree to the terms and conditions');
       return;
     }
-    
+
     setIsLoading(true);
-    // Add your signup logic here
-    setTimeout(() => {
+
+    try {
+      const response = await fetch('http://192.168.252.38/koso/api/signup.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+          confirmPassword,
+          agreeToTerms,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', data.message || 'Account created successfully!');
+        // Optionally reset form
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setAgreeToTerms(false);
+      } else {
+        Alert.alert('Error', data.error || 'Something went wrong');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Network error: ' + error.message);
+    } finally {
       setIsLoading(false);
-      Alert.alert('Success', 'Account created successfully!');
-    }, 2000);
+    }
   };
 
   const handleGoogleSignup = async () => {
+    // Note: Google Sign-In requires additional setup with @react-native-google-signin/google-signin
     setIsLoading(true);
-    // Add Google signup logic here
-    setTimeout(() => {
+    try {
+      // Placeholder for Google Sign-In logic
+      // Requires GoogleSignin configuration (see below for setup instructions)
+      Alert.alert('Info', 'Google Sign-In not fully implemented. Configure @react-native-google-signin.');
+      
+      // Example (uncomment after setting up Google Sign-In):
+      /*
+      const { idToken } = await GoogleSignin.signIn();
+      const response = await fetch('http://10.0.2.2/koso/api/google_signup.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ googleToken: idToken }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', data.message || 'Google signup successful!');
+      } else {
+        Alert.alert('Error', data.error || 'Google signup failed');
+      }
+      */
+    } catch (error) {
+      Alert.alert('Error', 'Google signup error: ' + error.message);
+    } finally {
       setIsLoading(false);
-      Alert.alert('Success', 'Google signup successful!');
-    }, 2000);
+    }
   };
 
   return (
